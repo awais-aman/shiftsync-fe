@@ -1,7 +1,11 @@
+import type { UserRole } from "@/shared/constants";
+
 export type CurrentUser = {
   id: string;
   email?: string;
-  role?: string;
+  role: UserRole;
+  displayName?: string;
+  desiredHoursPerWeek?: number;
   lastSignInAt?: string;
   emailConfirmed?: boolean;
 };

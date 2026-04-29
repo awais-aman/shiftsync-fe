@@ -18,8 +18,24 @@ export const ApiVerifiedInfo: FunctionComponent<ApiVerifiedInfoProps> = ({
         <div className="grid gap-1 text-sm">
           <div>
             <span className="text-muted-foreground">Role: </span>
-            <span className="font-medium">{result.data.role ?? "—"}</span>
+            <span className="font-medium capitalize">{result.data.role}</span>
           </div>
+          {result.data.displayName ? (
+            <div>
+              <span className="text-muted-foreground">Display name: </span>
+              <span className="font-medium">{result.data.displayName}</span>
+            </div>
+          ) : null}
+          {typeof result.data.desiredHoursPerWeek === "number" ? (
+            <div>
+              <span className="text-muted-foreground">
+                Desired hours / week:{" "}
+              </span>
+              <span className="font-medium">
+                {result.data.desiredHoursPerWeek}
+              </span>
+            </div>
+          ) : null}
           <div>
             <span className="text-muted-foreground">Email confirmed: </span>
             <span className="font-medium">
