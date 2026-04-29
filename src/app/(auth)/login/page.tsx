@@ -1,13 +1,12 @@
-import { AuthForm } from "@/app/(auth)/_components/auth-form";
-import { login } from "@/app/(auth)/actions";
+import { Login } from "@/app/(auth)/login/_components";
 
-type SearchParams = Promise<{ next?: string }>;
+type Props = {
+  searchParams: Promise<{ next?: string }>;
+};
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+const LoginPage = async ({ searchParams }: Props) => {
   const { next } = await searchParams;
-  return <AuthForm mode="login" action={login} next={next} />;
-}
+  return <Login next={next} />;
+};
+
+export default LoginPage;

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, type FunctionComponent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,41 +14,42 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { AuthFormState } from "@/app/(auth)/actions";
+import { AuthMode } from "@/shared/constants";
+import { ROUTES } from "@/shared/routes";
+import type { AuthAction, AuthFormState } from "@/types/auth";
 
-type Mode = "login" | "signup";
-
-type Props = {
-  mode: Mode;
-  action: (
-    state: AuthFormState,
-    formData: FormData,
-  ) => Promise<AuthFormState>;
+export type AuthFormProps = {
+  mode: AuthMode;
+  action: AuthAction;
   next?: string;
 };
 
 const COPY = {
-  login: {
+  [AuthMode.Login]: {
     title: "Welcome back",
     description: "Sign in to your ShiftSync account.",
     submit: "Sign in",
     pendingSubmit: "Signing in…",
     altPrompt: "Don't have an account?",
     altLabel: "Create one",
-    altHref: "/signup",
+    altHref: ROUTES.signup,
   },
-  signup: {
+  [AuthMode.Signup]: {
     title: "Create your account",
     description: "Get started with ShiftSync.",
     submit: "Sign up",
     pendingSubmit: "Creating account…",
     altPrompt: "Already have an account?",
     altLabel: "Sign in",
-    altHref: "/login",
+    altHref: ROUTES.login,
   },
 } as const;
 
-export function AuthForm({ mode, action, next }: Props) {
+export const AuthForm: FunctionComponent<AuthFormProps> = ({
+  mode,
+  action,
+  next,
+}) => {
   const copy = COPY[mode];
   const [state, formAction, pending] = useActionState<AuthFormState, FormData>(
     action,
@@ -99,10 +100,10 @@ export function AuthForm({ mode, action, next }: Props) {
               name="password"
               type="password"
               autoComplete={
-                mode === "login" ? "current-password" : "new-password"
+                mode === AuthMode.Login ? "current-password" : "new-password"
               }
               required
-              minLength={mode === "signup" ? 8 : undefined}
+              minLength={mode === AuthMode.Signup ? 8 : undefined}
               aria-invalid={Boolean(state?.fieldErrors?.password)}
             />
             {state?.fieldErrors?.password ? (
@@ -129,4 +130,4 @@ export function AuthForm({ mode, action, next }: Props) {
       </form>
     </Card>
   );
-}
+};

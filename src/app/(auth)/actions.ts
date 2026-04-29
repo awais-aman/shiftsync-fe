@@ -3,24 +3,18 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { ROUTES } from "@/shared/routes";
+import type { AuthFormState } from "@/types/auth";
 
 const loginSchema = z.object({
-  email: z.string().email("Enter a valid email"),
+  email: z.email("Enter a valid email"),
   password: z.string().min(1, "Password is required"),
 });
 
 const signupSchema = z.object({
-  email: z.string().email("Enter a valid email"),
+  email: z.email("Enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
-
-export type AuthFormState =
-  | {
-      error?: string;
-      message?: string;
-      fieldErrors?: { email?: string[]; password?: string[] };
-    }
-  | undefined;
 
 export async function login(
   _: AuthFormState,
@@ -42,7 +36,7 @@ export async function login(
     return { error: error.message };
   }
 
-  const next = (formData.get("next") as string) || "/dashboard";
+  const next = (formData.get("next") as string) || ROUTES.dashboard;
   redirect(next);
 }
 
@@ -65,7 +59,7 @@ export async function signup(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
+      emailRedirectTo: `${origin}${ROUTES.authCallback}`,
     },
   });
 
@@ -74,7 +68,7 @@ export async function signup(
   }
 
   if (data.session) {
-    redirect("/dashboard");
+    redirect(ROUTES.dashboard);
   }
 
   return {
@@ -85,5 +79,5 @@ export async function signup(
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/login");
+  redirect(ROUTES.login);
 }

@@ -1,6 +1,8 @@
-import { AuthForm } from "@/app/(auth)/_components/auth-form";
-import { signup } from "@/app/(auth)/actions";
+import type { NextPage } from "next";
+import { Signup } from "@/app/(auth)/signup/_components";
 
-export default function SignupPage() {
-  return <AuthForm mode="signup" action={signup} />;
-}
+const SignupPage: NextPage = () => {
+  return <Signup />;
+};
+
+export default SignupPage;

@@ -1,8 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ROUTES } from "@/shared/routes";
 
-const PROTECTED_PREFIXES = ["/dashboard"];
-const AUTH_ROUTES = ["/login", "/signup"];
+const PROTECTED_PREFIXES = [ROUTES.dashboard];
+const AUTH_ROUTES = [ROUTES.login, ROUTES.signup];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -38,14 +39,14 @@ export async function proxy(request: NextRequest) {
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = ROUTES.login;
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = ROUTES.dashboard;
     return NextResponse.redirect(url);
   }
 
