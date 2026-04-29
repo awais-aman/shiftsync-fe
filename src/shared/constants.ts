@@ -6,6 +6,8 @@ export enum UserRole {
 
 export enum QueryKeys {
   CurrentUser = "currentUser",
+  Locations = "locations",
+  Location = "location",
 }
 
 export enum AuthMode {

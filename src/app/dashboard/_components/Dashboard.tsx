@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -37,7 +39,15 @@ export const Dashboard = async () => {
         <CardContent className="grid gap-4">
           <SessionInfo email={user.email} userId={user.id} />
           <ApiVerifiedInfo result={meResult} />
-          <LogoutButton />
+          <div className="flex flex-col gap-2 border-t pt-4">
+            <Link
+              href={ROUTES.locations}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              Manage locations
+            </Link>
+            <LogoutButton />
+          </div>
         </CardContent>
       </Card>
     </div>
