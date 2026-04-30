@@ -4,6 +4,7 @@ const backendURL = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
 const ME_PATH = `${backendURL}/me`;
 const LOCATIONS_PATH = `${backendURL}/locations`;
 const SKILLS_PATH = `${backendURL}/skills`;
+const TEAM_PATH = `${backendURL}/team`;
 
 // Backend Routes
 export const APIS = {
@@ -24,6 +25,13 @@ export const APIS = {
     update: (id: string) => `${SKILLS_PATH}/${id}`,
     delete: (id: string) => `${SKILLS_PATH}/${id}`,
   },
+  team: {
+    list: TEAM_PATH,
+    detail: (id: string) => `${TEAM_PATH}/${id}`,
+    setCertifications: (id: string) => `${TEAM_PATH}/${id}/certifications`,
+    setSkills: (id: string) => `${TEAM_PATH}/${id}/skills`,
+    setManagedLocations: (id: string) => `${TEAM_PATH}/${id}/managed-locations`,
+  },
 };
 
 // Frontend Routes
@@ -37,4 +45,6 @@ export const ROUTES = {
   newLocation: "/locations/new",
   skills: "/skills",
   newSkill: "/skills/new",
+  team: "/team",
+  teamMember: (id: string) => `/team/${id}`,
 };

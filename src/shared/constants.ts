@@ -10,6 +10,8 @@ export enum QueryKeys {
   Location = "location",
   Skills = "skills",
   Skill = "skill",
+  Team = "team",
+  TeamMember = "teamMember",
 }
 
 export enum AuthMode {
