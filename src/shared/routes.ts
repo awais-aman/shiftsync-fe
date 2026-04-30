@@ -9,6 +9,7 @@ const SHIFTS_PATH = `${backendURL}/shifts`;
 const AVAILABILITY_PATH = `${backendURL}/availability`;
 const OVERTIME_PATH = `${backendURL}/overtime`;
 const SWAPS_PATH = `${backendURL}/swap-requests`;
+const NOTIFICATIONS_PATH = `${backendURL}/notifications`;
 
 // Backend Routes
 export const APIS = {
@@ -72,6 +73,12 @@ export const APIS = {
     accept: (id: string) => `${SWAPS_PATH}/${id}/accept`,
     approve: (id: string) => `${SWAPS_PATH}/${id}/approve`,
     reject: (id: string) => `${SWAPS_PATH}/${id}/reject`,
+  },
+  notifications: {
+    list: NOTIFICATIONS_PATH,
+    unreadCount: `${NOTIFICATIONS_PATH}/unread-count`,
+    markRead: (id: string) => `${NOTIFICATIONS_PATH}/${id}/read`,
+    markAllRead: `${NOTIFICATIONS_PATH}/mark-all-read`,
   },
   availability: {
     me: `${AVAILABILITY_PATH}/me`,

@@ -11,6 +11,7 @@ import {
 import { ApiVerifiedInfo } from "@/app/dashboard/_components/ApiVerifiedInfo";
 import { LogoutButton } from "@/app/dashboard/_components/LogoutButton";
 import { SessionInfo } from "@/app/dashboard/_components/SessionInfo";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { apiFetch } from "@/lib/api/server";
 import { createClient } from "@/lib/supabase/server";
 import { APIS, ROUTES } from "@/shared/routes";
@@ -29,12 +30,15 @@ export const Dashboard = async () => {
   return (
     <div className="flex flex-1 items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>You&apos;re signed in</CardTitle>
-          <CardDescription>
-            Welcome to ShiftSync. Roles, schedules, and the rest land in the
-            next slices.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-start justify-between gap-3">
+          <div>
+            <CardTitle>You&apos;re signed in</CardTitle>
+            <CardDescription>
+              Welcome to ShiftSync. Roles, schedules, and the rest land in the
+              next slices.
+            </CardDescription>
+          </div>
+          <NotificationBell userId={user.id} />
         </CardHeader>
         <CardContent className="grid gap-4">
           <SessionInfo email={user.email} userId={user.id} />

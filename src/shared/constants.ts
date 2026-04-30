@@ -20,6 +20,8 @@ export enum QueryKeys {
   OvertimeOverrides = "overtimeOverrides",
   Swaps = "swaps",
   Swap = "swap",
+  Notifications = "notifications",
+  NotificationsUnread = "notificationsUnread",
 }
 
 export enum AuthMode {
