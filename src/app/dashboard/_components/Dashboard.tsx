@@ -14,6 +14,7 @@ import { SessionInfo } from "@/app/dashboard/_components/SessionInfo";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { apiFetch } from "@/lib/api/server";
 import { createClient } from "@/lib/supabase/server";
+import { UserRole } from "@/shared/constants";
 import { APIS, ROUTES } from "@/shared/routes";
 import type { CurrentUser } from "@/types/auth";
 
@@ -26,6 +27,7 @@ export const Dashboard = async () => {
   if (!user) redirect(ROUTES.login);
 
   const meResult = await apiFetch<CurrentUser>(APIS.auth.me);
+  const isAdmin = meResult.ok && meResult.data.role === UserRole.Admin;
 
   return (
     <div className="flex flex-1 items-center justify-center p-4">
@@ -80,6 +82,14 @@ export const Dashboard = async () => {
             >
               Swaps & drops
             </Link>
+            {isAdmin ? (
+              <Link
+                href={ROUTES.adminAudit}
+                className={buttonVariants({ variant: "secondary" })}
+              >
+                Audit log
+              </Link>
+            ) : null}
             <LogoutButton />
           </div>
         </CardContent>

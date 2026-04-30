@@ -22,6 +22,8 @@ export enum QueryKeys {
   Swap = "swap",
   Notifications = "notifications",
   NotificationsUnread = "notificationsUnread",
+  Audit = "audit",
+  Suggestions = "suggestions",
 }
 
 export enum AuthMode {

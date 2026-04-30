@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { AssignmentsPanel } from "@/app/shifts/[id]/_components/AssignmentsPanel";
+import { ChangeHistory } from "@/app/shifts/[id]/_components/ChangeHistory";
 import { apiFetch } from "@/lib/api/server";
 import { formatInLocationTz } from "@/lib/time/format";
 import { UserRole } from "@/shared/constants";
@@ -103,6 +104,8 @@ export const ShiftDetail: FunctionComponent<ShiftDetailProps> = async ({
         requiredSkillId={shift.requiredSkillId}
         locationId={shift.locationId}
       />
+
+      {canManage ? <ChangeHistory shiftId={shift.id} /> : null}
 
       <BackLink />
     </div>

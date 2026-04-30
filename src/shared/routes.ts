@@ -10,6 +10,7 @@ const AVAILABILITY_PATH = `${backendURL}/availability`;
 const OVERTIME_PATH = `${backendURL}/overtime`;
 const SWAPS_PATH = `${backendURL}/swap-requests`;
 const NOTIFICATIONS_PATH = `${backendURL}/notifications`;
+const AUDIT_PATH = `${backendURL}/audit`;
 
 // Backend Routes
 export const APIS = {
@@ -58,6 +59,49 @@ export const APIS = {
       `${SHIFTS_PATH}/${id}/assignments/${staffId}`,
     dryRun: (id: string, staffId: string) =>
       `${SHIFTS_PATH}/${id}/assignments/dry-run?staffId=${staffId}`,
+    suggestions: (id: string, limit?: number) =>
+      `${SHIFTS_PATH}/${id}/assignments/suggestions${
+        limit ? `?limit=${limit}` : ""
+      }`,
+  },
+  audit: {
+    list: (params?: {
+      entityType?: string;
+      entityId?: string;
+      action?: string;
+      actorId?: string;
+      locationId?: string;
+      from?: string;
+      to?: string;
+    }) => {
+      if (!params) return AUDIT_PATH;
+      const search = new URLSearchParams();
+      for (const [k, v] of Object.entries(params)) {
+        if (v) search.set(k, v);
+      }
+      const qs = search.toString();
+      return qs ? `${AUDIT_PATH}?${qs}` : AUDIT_PATH;
+    },
+    exportCsv: (params?: {
+      entityType?: string;
+      entityId?: string;
+      action?: string;
+      actorId?: string;
+      locationId?: string;
+      from?: string;
+      to?: string;
+    }) => {
+      const search = new URLSearchParams();
+      if (params) {
+        for (const [k, v] of Object.entries(params)) {
+          if (v) search.set(k, v);
+        }
+      }
+      const qs = search.toString();
+      return qs
+        ? `${AUDIT_PATH}/export.csv?${qs}`
+        : `${AUDIT_PATH}/export.csv`;
+    },
   },
   overtime: {
     listOverrides: (staffId: string) =>
@@ -114,4 +158,5 @@ export const ROUTES = {
   shiftDetail: (id: string) => `/shifts/${id}`,
   availability: "/availability",
   swaps: "/swaps",
+  adminAudit: "/admin/audit",
 };

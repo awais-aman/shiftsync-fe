@@ -17,6 +17,7 @@ import {
   useAssignStaff,
   useAssignmentDryRun,
   useShiftAssignments,
+  useSuggestions,
   useUnassignStaff,
 } from "@/hooks/assignments";
 import { useGrantOverride } from "@/hooks/overtime";
@@ -202,7 +203,12 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
               shiftLocationTimezone={shiftLocationTimezone}
               staffId={selectedStaffId}
             />
-          ) : null}
+          ) : (
+            <SuggestionsPanel
+              shiftId={shiftId}
+              onPick={(staffId) => setSelectedStaffId(staffId)}
+            />
+          )}
 
           <div className="flex justify-end">
             <AssignButton
@@ -215,6 +221,63 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
         </CardFooter>
       ) : null}
     </Card>
+  );
+};
+
+type SuggestionsPanelProps = {
+  shiftId: string;
+  onPick: (staffId: string) => void;
+};
+
+const SuggestionsPanel: FunctionComponent<SuggestionsPanelProps> = ({
+  shiftId,
+  onPick,
+}) => {
+  const { data, isLoading, error } = useSuggestions(shiftId, true);
+
+  if (isLoading) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        Finding qualified staff…
+      </p>
+    );
+  }
+  if (error) {
+    return <p className="text-destructive text-sm">{error.message}</p>;
+  }
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-md border bg-muted/30 p-3">
+      <div className="mb-2 text-sm font-medium">
+        Suggested (lowest weekly hours, all constraints clear)
+      </div>
+      <ul className="flex flex-col gap-1">
+        {data.map((s) => (
+          <li
+            key={s.staffId}
+            className="flex items-center justify-between text-sm"
+          >
+            <span>
+              {s.displayName ?? s.staffId.slice(0, 8)}
+              <span className="text-muted-foreground ml-2 text-xs">
+                {s.weeklyHours.toFixed(1)}h this week
+              </span>
+            </span>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => onPick(s.staffId)}
+            >
+              Pick
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
