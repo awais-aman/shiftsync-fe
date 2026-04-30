@@ -46,6 +46,12 @@ export const Dashboard = async () => {
             >
               Manage locations
             </Link>
+            <Link
+              href={ROUTES.skills}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              Manage skills
+            </Link>
             <LogoutButton />
           </div>
         </CardContent>
