@@ -8,6 +8,7 @@ const TEAM_PATH = `${backendURL}/team`;
 const SHIFTS_PATH = `${backendURL}/shifts`;
 const AVAILABILITY_PATH = `${backendURL}/availability`;
 const OVERTIME_PATH = `${backendURL}/overtime`;
+const SWAPS_PATH = `${backendURL}/swap-requests`;
 
 // Backend Routes
 export const APIS = {
@@ -63,6 +64,15 @@ export const APIS = {
     createOverride: `${OVERTIME_PATH}/overrides`,
     deleteOverride: (id: string) => `${OVERTIME_PATH}/overrides/${id}`,
   },
+  swaps: {
+    list: SWAPS_PATH,
+    detail: (id: string) => `${SWAPS_PATH}/${id}`,
+    create: SWAPS_PATH,
+    cancel: (id: string) => `${SWAPS_PATH}/${id}/cancel`,
+    accept: (id: string) => `${SWAPS_PATH}/${id}/accept`,
+    approve: (id: string) => `${SWAPS_PATH}/${id}/approve`,
+    reject: (id: string) => `${SWAPS_PATH}/${id}/reject`,
+  },
   availability: {
     me: `${AVAILABILITY_PATH}/me`,
     createRecurring: `${AVAILABILITY_PATH}/me/recurring`,
@@ -96,4 +106,5 @@ export const ROUTES = {
   newShift: "/shifts/new",
   shiftDetail: (id: string) => `/shifts/${id}`,
   availability: "/availability",
+  swaps: "/swaps",
 };

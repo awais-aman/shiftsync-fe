@@ -70,6 +70,12 @@ export const Dashboard = async () => {
             >
               My availability
             </Link>
+            <Link
+              href={ROUTES.swaps}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              Swaps & drops
+            </Link>
             <LogoutButton />
           </div>
         </CardContent>

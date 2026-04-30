@@ -18,6 +18,8 @@ export enum QueryKeys {
   Assignments = "assignments",
   DryRun = "dryRun",
   OvertimeOverrides = "overtimeOverrides",
+  Swaps = "swaps",
+  Swap = "swap",
 }
 
 export enum AuthMode {

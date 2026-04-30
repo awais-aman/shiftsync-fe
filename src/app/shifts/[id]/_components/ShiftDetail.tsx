@@ -98,6 +98,7 @@ export const ShiftDetail: FunctionComponent<ShiftDetailProps> = async ({
         shiftStartAt={shift.startAt}
         shiftLocationTimezone={tz}
         canManage={canManage}
+        currentUserId={meResult.data.id}
         allStaff={allStaff}
         requiredSkillId={shift.requiredSkillId}
         locationId={shift.locationId}

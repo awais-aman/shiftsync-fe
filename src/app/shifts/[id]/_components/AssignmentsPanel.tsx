@@ -20,14 +20,17 @@ import {
   useUnassignStaff,
 } from "@/hooks/assignments";
 import { useGrantOverride } from "@/hooks/overtime";
+import { useCreateSwap } from "@/hooks/swaps";
 import type { TeamMember } from "@/types/team";
 import type { ConstraintViolation } from "@/types/overtime";
+import { SwapType } from "@/types/swap";
 
 export type AssignmentsPanelProps = {
   shiftId: string;
   shiftStartAt: string;
   shiftLocationTimezone: string;
   canManage: boolean;
+  currentUserId: string;
   allStaff: TeamMember[];
   requiredSkillId: string;
   locationId: string;
@@ -38,6 +41,7 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
   shiftStartAt,
   shiftLocationTimezone,
   canManage,
+  currentUserId,
   allStaff,
   requiredSkillId,
   locationId,
@@ -45,6 +49,7 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
   const { data: assignments, isLoading, error } = useShiftAssignments(shiftId);
   const assign = useAssignStaff(shiftId);
   const unassign = useUnassignStaff(shiftId);
+  const createSwap = useCreateSwap();
 
   const assignedIds = useMemo(
     () => new Set((assignments ?? []).map((a) => a.staffId)),
@@ -129,17 +134,42 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
                     </div>
                   ) : null}
                 </div>
-                {canManage ? (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => onUnassign(a.staffId)}
-                    disabled={unassign.isPending}
-                  >
-                    Unassign
-                  </Button>
-                ) : null}
+                <div className="flex gap-1">
+                  {a.staffId === currentUserId ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() =>
+                        createSwap.mutate(
+                          {
+                            type: SwapType.Drop,
+                            requestingAssignmentId: a.id,
+                          },
+                          {
+                            onSuccess: () =>
+                              toast.success("Drop request submitted"),
+                            onError: (e) => toast.error(e.message),
+                          },
+                        )
+                      }
+                      disabled={createSwap.isPending}
+                    >
+                      Request drop
+                    </Button>
+                  ) : null}
+                  {canManage ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onUnassign(a.staffId)}
+                      disabled={unassign.isPending}
+                    >
+                      Unassign
+                    </Button>
+                  ) : null}
+                </div>
               </li>
             ))}
           </ul>
