@@ -7,6 +7,7 @@ const SKILLS_PATH = `${backendURL}/skills`;
 const TEAM_PATH = `${backendURL}/team`;
 const SHIFTS_PATH = `${backendURL}/shifts`;
 const AVAILABILITY_PATH = `${backendURL}/availability`;
+const OVERTIME_PATH = `${backendURL}/overtime`;
 
 // Backend Routes
 export const APIS = {
@@ -53,6 +54,14 @@ export const APIS = {
     assignments: (id: string) => `${SHIFTS_PATH}/${id}/assignments`,
     unassign: (id: string, staffId: string) =>
       `${SHIFTS_PATH}/${id}/assignments/${staffId}`,
+    dryRun: (id: string, staffId: string) =>
+      `${SHIFTS_PATH}/${id}/assignments/dry-run?staffId=${staffId}`,
+  },
+  overtime: {
+    listOverrides: (staffId: string) =>
+      `${OVERTIME_PATH}/overrides?staffId=${staffId}`,
+    createOverride: `${OVERTIME_PATH}/overrides`,
+    deleteOverride: (id: string) => `${OVERTIME_PATH}/overrides/${id}`,
   },
   availability: {
     me: `${AVAILABILITY_PATH}/me`,

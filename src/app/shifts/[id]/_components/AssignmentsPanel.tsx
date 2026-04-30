@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FunctionComponent } from "react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,13 +15,18 @@ import {
 import { Label } from "@/components/ui/label";
 import {
   useAssignStaff,
+  useAssignmentDryRun,
   useShiftAssignments,
   useUnassignStaff,
 } from "@/hooks/assignments";
+import { useGrantOverride } from "@/hooks/overtime";
 import type { TeamMember } from "@/types/team";
+import type { ConstraintViolation } from "@/types/overtime";
 
 export type AssignmentsPanelProps = {
   shiftId: string;
+  shiftStartAt: string;
+  shiftLocationTimezone: string;
   canManage: boolean;
   allStaff: TeamMember[];
   requiredSkillId: string;
@@ -29,6 +35,8 @@ export type AssignmentsPanelProps = {
 
 export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
   shiftId,
+  shiftStartAt,
+  shiftLocationTimezone,
   canManage,
   allStaff,
   requiredSkillId,
@@ -43,8 +51,6 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
     [assignments],
   );
 
-  // Show every staff member; flag whether each one would clear the BE's
-  // skill+cert filter so the manager can see why someone's greyed out.
   const staffOptions = useMemo(() => {
     return allStaff
       .filter((staff) => !assignedIds.has(staff.id))
@@ -94,7 +100,7 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
         <CardTitle>Assigned staff</CardTitle>
         <CardDescription>
           The constraint engine validates skills, certifications, availability,
-          double-booking, and minimum rest before saving.
+          double-booking, minimum rest, and overtime before saving.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -157,23 +163,206 @@ export const AssignmentsPanel: FunctionComponent<AssignmentsPanelProps> = ({
                 </option>
               ))}
             </select>
-            <p className="text-muted-foreground text-xs">
-              Staff missing skill or certification are still listed but will be
-              rejected by the constraint engine. Availability and double-booking
-              checks happen on submit.
-            </p>
           </div>
+
+          {selectedStaffId ? (
+            <DryRunPanel
+              shiftId={shiftId}
+              shiftStartAt={shiftStartAt}
+              shiftLocationTimezone={shiftLocationTimezone}
+              staffId={selectedStaffId}
+            />
+          ) : null}
+
           <div className="flex justify-end">
-            <Button
-              type="button"
-              onClick={onAssign}
-              disabled={!selectedStaffId || assign.isPending}
-            >
-              {assign.isPending ? "Assigning…" : "Assign"}
-            </Button>
+            <AssignButton
+              shiftId={shiftId}
+              staffId={selectedStaffId}
+              onAssign={onAssign}
+              isPending={assign.isPending}
+            />
           </div>
         </CardFooter>
       ) : null}
     </Card>
   );
 };
+
+type AssignButtonProps = {
+  shiftId: string;
+  staffId: string;
+  onAssign: () => void;
+  isPending: boolean;
+};
+
+const AssignButton: FunctionComponent<AssignButtonProps> = ({
+  shiftId,
+  staffId,
+  onAssign,
+  isPending,
+}) => {
+  const { data: dryRun } = useAssignmentDryRun(shiftId, staffId);
+  const blocked = !!dryRun && !dryRun.allowed;
+  return (
+    <Button
+      type="button"
+      onClick={onAssign}
+      disabled={!staffId || isPending || blocked}
+    >
+      {isPending ? "Assigning…" : "Assign"}
+    </Button>
+  );
+};
+
+type DryRunPanelProps = {
+  shiftId: string;
+  shiftStartAt: string;
+  shiftLocationTimezone: string;
+  staffId: string;
+};
+
+const DryRunPanel: FunctionComponent<DryRunPanelProps> = ({
+  shiftId,
+  shiftStartAt,
+  shiftLocationTimezone,
+  staffId,
+}) => {
+  const { data, isLoading, error } = useAssignmentDryRun(shiftId, staffId);
+
+  if (isLoading) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        Checking constraints…
+      </p>
+    );
+  }
+  if (error) {
+    return <p className="text-destructive text-sm">{error.message}</p>;
+  }
+  if (!data) return null;
+
+  if (data.blocking.length === 0 && data.warnings.length === 0) {
+    return (
+      <div className="rounded-md border bg-muted/30 p-3 text-sm">
+        ✓ All constraints clear.
+      </div>
+    );
+  }
+
+  const consecutive7 = data.blocking.find(
+    (v) => v.rule === "consecutive_7_block",
+  );
+
+  return (
+    <div className="flex flex-col gap-2">
+      {data.blocking.map((v) => (
+        <ViolationRow key={`${v.rule}-${v.message}`} violation={v} />
+      ))}
+      {data.warnings.map((v) => (
+        <ViolationRow key={`${v.rule}-${v.message}`} violation={v} />
+      ))}
+      {consecutive7 ? (
+        <GrantOverrideForm
+          staffId={staffId}
+          shiftStartAt={shiftStartAt}
+          shiftLocationTimezone={shiftLocationTimezone}
+        />
+      ) : null}
+    </div>
+  );
+};
+
+const ViolationRow: FunctionComponent<{ violation: ConstraintViolation }> = ({
+  violation,
+}) => {
+  const blocking = violation.severity === "block";
+  return (
+    <div
+      className={
+        "flex items-start gap-2 rounded-md border p-2 text-sm " +
+        (blocking
+          ? "border-destructive/40 bg-destructive/5"
+          : "border-amber-500/40 bg-amber-50")
+      }
+    >
+      <Badge variant={blocking ? "destructive" : "secondary"}>
+        {blocking ? "block" : "warn"}
+      </Badge>
+      <span>{violation.message}</span>
+    </div>
+  );
+};
+
+type GrantOverrideFormProps = {
+  staffId: string;
+  shiftStartAt: string;
+  shiftLocationTimezone: string;
+};
+
+const GrantOverrideForm: FunctionComponent<GrantOverrideFormProps> = ({
+  staffId,
+  shiftStartAt,
+  shiftLocationTimezone,
+}) => {
+  const grant = useGrantOverride();
+  const [reason, setReason] = useState("");
+
+  const effectiveDate = formatLocalDate(shiftStartAt, shiftLocationTimezone);
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    grant.mutate(
+      { staffId, effectiveDate, reason: reason.trim() },
+      {
+        onSuccess: () => {
+          toast.success("Override granted");
+          setReason("");
+        },
+        onError: (e) => toast.error(e.message),
+      },
+    );
+  };
+
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="flex flex-col gap-2 rounded-md border bg-muted/30 p-3"
+    >
+      <div className="text-sm font-medium">
+        Grant 7th-day override for {effectiveDate}
+      </div>
+      <Label htmlFor="override-reason" className="text-xs font-normal">
+        Reason (required, ≥ 5 chars)
+      </Label>
+      <textarea
+        id="override-reason"
+        value={reason}
+        onChange={(event) => setReason(event.target.value)}
+        minLength={5}
+        maxLength={500}
+        required
+        className="border-input bg-background min-h-16 rounded-md border px-3 py-2 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+        placeholder="e.g. Sick coverage for Sarah; staff agreed."
+      />
+      <div className="flex justify-end">
+        <Button
+          type="submit"
+          size="sm"
+          disabled={grant.isPending || reason.trim().length < 5}
+        >
+          {grant.isPending ? "Granting…" : "Grant override"}
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+function formatLocalDate(utcIso: string, tz: string): string {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return formatter.format(new Date(utcIso));
+}

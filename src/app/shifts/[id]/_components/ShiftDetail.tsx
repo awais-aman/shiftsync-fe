@@ -95,6 +95,8 @@ export const ShiftDetail: FunctionComponent<ShiftDetailProps> = async ({
 
       <AssignmentsPanel
         shiftId={shift.id}
+        shiftStartAt={shift.startAt}
+        shiftLocationTimezone={tz}
         canManage={canManage}
         allStaff={allStaff}
         requiredSkillId={shift.requiredSkillId}
