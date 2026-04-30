@@ -5,6 +5,7 @@ const ME_PATH = `${backendURL}/me`;
 const LOCATIONS_PATH = `${backendURL}/locations`;
 const SKILLS_PATH = `${backendURL}/skills`;
 const TEAM_PATH = `${backendURL}/team`;
+const SHIFTS_PATH = `${backendURL}/shifts`;
 
 // Backend Routes
 export const APIS = {
@@ -32,6 +33,23 @@ export const APIS = {
     setSkills: (id: string) => `${TEAM_PATH}/${id}/skills`,
     setManagedLocations: (id: string) => `${TEAM_PATH}/${id}/managed-locations`,
   },
+  shifts: {
+    list: (params?: { locationId?: string; from?: string; to?: string }) => {
+      if (!params) return SHIFTS_PATH;
+      const search = new URLSearchParams();
+      if (params.locationId) search.set("locationId", params.locationId);
+      if (params.from) search.set("from", params.from);
+      if (params.to) search.set("to", params.to);
+      const qs = search.toString();
+      return qs ? `${SHIFTS_PATH}?${qs}` : SHIFTS_PATH;
+    },
+    create: SHIFTS_PATH,
+    detail: (id: string) => `${SHIFTS_PATH}/${id}`,
+    update: (id: string) => `${SHIFTS_PATH}/${id}`,
+    delete: (id: string) => `${SHIFTS_PATH}/${id}`,
+    publish: (id: string) => `${SHIFTS_PATH}/${id}/publish`,
+    unpublish: (id: string) => `${SHIFTS_PATH}/${id}/unpublish`,
+  },
 };
 
 // Frontend Routes
@@ -47,4 +65,6 @@ export const ROUTES = {
   newSkill: "/skills/new",
   team: "/team",
   teamMember: (id: string) => `/team/${id}`,
+  shifts: "/shifts",
+  newShift: "/shifts/new",
 };

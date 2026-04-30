@@ -58,6 +58,12 @@ export const Dashboard = async () => {
             >
               Manage team
             </Link>
+            <Link
+              href={ROUTES.shifts}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              Manage shifts
+            </Link>
             <LogoutButton />
           </div>
         </CardContent>

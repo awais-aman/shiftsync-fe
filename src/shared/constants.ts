@@ -12,6 +12,8 @@ export enum QueryKeys {
   Skill = "skill",
   Team = "team",
   TeamMember = "teamMember",
+  Shifts = "shifts",
+  Shift = "shift",
 }
 
 export enum AuthMode {

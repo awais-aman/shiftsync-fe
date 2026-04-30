@@ -7,6 +7,7 @@ const PROTECTED_PREFIXES = [
   ROUTES.locations,
   ROUTES.skills,
   ROUTES.team,
+  ROUTES.shifts,
 ];
 const AUTH_ROUTES = [ROUTES.login, ROUTES.signup];
 
