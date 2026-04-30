@@ -6,6 +6,7 @@ const LOCATIONS_PATH = `${backendURL}/locations`;
 const SKILLS_PATH = `${backendURL}/skills`;
 const TEAM_PATH = `${backendURL}/team`;
 const SHIFTS_PATH = `${backendURL}/shifts`;
+const AVAILABILITY_PATH = `${backendURL}/availability`;
 
 // Backend Routes
 export const APIS = {
@@ -50,6 +51,20 @@ export const APIS = {
     publish: (id: string) => `${SHIFTS_PATH}/${id}/publish`,
     unpublish: (id: string) => `${SHIFTS_PATH}/${id}/unpublish`,
   },
+  availability: {
+    me: `${AVAILABILITY_PATH}/me`,
+    createRecurring: `${AVAILABILITY_PATH}/me/recurring`,
+    updateRecurring: (id: string) =>
+      `${AVAILABILITY_PATH}/me/recurring/${id}`,
+    deleteRecurring: (id: string) =>
+      `${AVAILABILITY_PATH}/me/recurring/${id}`,
+    createException: `${AVAILABILITY_PATH}/me/exceptions`,
+    updateException: (id: string) =>
+      `${AVAILABILITY_PATH}/me/exceptions/${id}`,
+    deleteException: (id: string) =>
+      `${AVAILABILITY_PATH}/me/exceptions/${id}`,
+    forStaff: (staffId: string) => `${AVAILABILITY_PATH}/staff/${staffId}`,
+  },
 };
 
 // Frontend Routes
@@ -67,4 +82,5 @@ export const ROUTES = {
   teamMember: (id: string) => `/team/${id}`,
   shifts: "/shifts",
   newShift: "/shifts/new",
+  availability: "/availability",
 };

@@ -64,6 +64,12 @@ export const Dashboard = async () => {
             >
               Manage shifts
             </Link>
+            <Link
+              href={ROUTES.availability}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              My availability
+            </Link>
             <LogoutButton />
           </div>
         </CardContent>
