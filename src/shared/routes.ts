@@ -50,6 +50,9 @@ export const APIS = {
     delete: (id: string) => `${SHIFTS_PATH}/${id}`,
     publish: (id: string) => `${SHIFTS_PATH}/${id}/publish`,
     unpublish: (id: string) => `${SHIFTS_PATH}/${id}/unpublish`,
+    assignments: (id: string) => `${SHIFTS_PATH}/${id}/assignments`,
+    unassign: (id: string, staffId: string) =>
+      `${SHIFTS_PATH}/${id}/assignments/${staffId}`,
   },
   availability: {
     me: `${AVAILABILITY_PATH}/me`,
@@ -82,5 +85,6 @@ export const ROUTES = {
   teamMember: (id: string) => `/team/${id}`,
   shifts: "/shifts",
   newShift: "/shifts/new",
+  shiftDetail: (id: string) => `/shifts/${id}`,
   availability: "/availability",
 };

@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type FunctionComponent } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,6 +19,7 @@ import {
   useUnpublishShift,
 } from "@/hooks/shifts";
 import { formatInLocationTz } from "@/lib/time/format";
+import { ROUTES } from "@/shared/routes";
 import type { Location } from "@/types/location";
 import { ShiftStatus, type Shift } from "@/types/shift";
 
@@ -149,14 +151,16 @@ const ShiftCard: FunctionComponent<ShiftCardProps> = ({ shift, canManage }) => {
         <p className="text-muted-foreground text-sm">
           Headcount {shift.headcount}
         </p>
-        {canManage ? (
-          <div className="flex gap-2">
-            {shift.status === ShiftStatus.Draft ? (
-              <Button
-                size="sm"
-                onClick={onPublish}
-                disabled={pending}
-              >
+        <div className="flex gap-2">
+          <Link
+            href={ROUTES.shiftDetail(shift.id)}
+            className={buttonVariants({ variant: "secondary", size: "sm" })}
+          >
+            Open
+          </Link>
+          {canManage ? (
+            shift.status === ShiftStatus.Draft ? (
+              <Button size="sm" onClick={onPublish} disabled={pending}>
                 {publish.isPending ? "Publishing…" : "Publish"}
               </Button>
             ) : (
@@ -168,9 +172,9 @@ const ShiftCard: FunctionComponent<ShiftCardProps> = ({ shift, canManage }) => {
               >
                 {unpublish.isPending ? "Unpublishing…" : "Unpublish"}
               </Button>
-            )}
-          </div>
-        ) : null}
+            )
+          ) : null}
+        </div>
       </CardContent>
     </Card>
   );
