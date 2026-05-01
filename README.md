@@ -62,6 +62,10 @@ The `NEXT_PUBLIC_*` prefix is required because these are read in client componen
 
 ## Deployment (Vercel)
 
+This app is live at **https://shiftsync-fe-ten.vercel.app** (backed by `https://shiftsync-be-production.up.railway.app/api`).
+
+To deploy a fresh copy:
+
 1. New project → Import GitHub repo `shiftsync-fe`
 2. **Settings → Environment Variables**: paste the three `NEXT_PUBLIC_*` vars above for **Production**
 3. Set `NEXT_PUBLIC_BACKEND_ENDPOINT` to your Railway URL with `/api` suffix
