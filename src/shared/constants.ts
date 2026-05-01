@@ -25,6 +25,7 @@ export enum QueryKeys {
   NotificationsUnread = "notificationsUnread",
   Audit = "audit",
   Suggestions = "suggestions",
+  OnDuty = "onDuty",
 }
 
 export enum AuthMode {

@@ -82,6 +82,12 @@ export const Dashboard = async () => {
             >
               Swaps & drops
             </Link>
+            <Link
+              href={ROUTES.onDuty}
+              className={buttonVariants({ variant: "secondary" })}
+            >
+              On duty now
+            </Link>
             {isAdmin ? (
               <Link
                 href={ROUTES.adminAudit}

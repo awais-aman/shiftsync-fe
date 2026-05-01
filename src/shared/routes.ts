@@ -11,6 +11,7 @@ const OVERTIME_PATH = `${backendURL}/overtime`;
 const SWAPS_PATH = `${backendURL}/swap-requests`;
 const NOTIFICATIONS_PATH = `${backendURL}/notifications`;
 const AUDIT_PATH = `${backendURL}/audit`;
+const ON_DUTY_PATH = `${backendURL}/on-duty`;
 
 // Backend Routes
 export const APIS = {
@@ -126,6 +127,9 @@ export const APIS = {
     markRead: (id: string) => `${NOTIFICATIONS_PATH}/${id}/read`,
     markAllRead: `${NOTIFICATIONS_PATH}/mark-all-read`,
   },
+  onDuty: {
+    list: ON_DUTY_PATH,
+  },
   availability: {
     me: `${AVAILABILITY_PATH}/me`,
     createRecurring: `${AVAILABILITY_PATH}/me/recurring`,
@@ -161,5 +165,6 @@ export const ROUTES = {
   availability: "/availability",
   swaps: "/swaps",
   openShifts: "/swaps/open",
+  onDuty: "/on-duty",
   adminAudit: "/admin/audit",
 };
