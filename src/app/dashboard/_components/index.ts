@@ -1,7 +1,7 @@
 export { Dashboard } from "@/app/dashboard/_components/Dashboard";
-export { SessionInfo } from "@/app/dashboard/_components/SessionInfo";
-export { ApiVerifiedInfo } from "@/app/dashboard/_components/ApiVerifiedInfo";
+export { DashboardLinks } from "@/app/dashboard/_components/DashboardLinks";
 export { LogoutButton } from "@/app/dashboard/_components/LogoutButton";
-export type { SessionInfoProps } from "@/app/dashboard/_components/SessionInfo";
-export type { ApiVerifiedInfoProps } from "@/app/dashboard/_components/ApiVerifiedInfo";
+export { ProfileHeader } from "@/app/dashboard/_components/ProfileHeader";
+export type { DashboardLinksProps } from "@/app/dashboard/_components/DashboardLinks";
 export type { LogoutButtonProps } from "@/app/dashboard/_components/LogoutButton";
+export type { ProfileHeaderProps } from "@/app/dashboard/_components/ProfileHeader";
