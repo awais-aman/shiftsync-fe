@@ -15,13 +15,23 @@ export const Swaps = async () => {
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 p-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Swaps & drops</h1>
-        <p className="text-muted-foreground text-sm">
-          {canApprove
-            ? "Manager view: approve or reject pending requests, alongside your own."
-            : "Track requests you've initiated and ones waiting on your acceptance."}
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Swaps & drops
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            {canApprove
+              ? "Manager view: approve or reject pending requests, alongside your own."
+              : "Track requests you've initiated and ones waiting on your acceptance."}
+          </p>
+        </div>
+        <Link
+          href={ROUTES.openShifts}
+          className={buttonVariants({ variant: "secondary" })}
+        >
+          Open shifts
+        </Link>
       </div>
       <SwapsInbox canApprove={canApprove} />
       <div>

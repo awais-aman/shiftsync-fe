@@ -111,10 +111,12 @@ export const APIS = {
   },
   swaps: {
     list: SWAPS_PATH,
+    open: `${SWAPS_PATH}/open`,
     detail: (id: string) => `${SWAPS_PATH}/${id}`,
     create: SWAPS_PATH,
     cancel: (id: string) => `${SWAPS_PATH}/${id}/cancel`,
     accept: (id: string) => `${SWAPS_PATH}/${id}/accept`,
+    claim: (id: string) => `${SWAPS_PATH}/${id}/claim`,
     approve: (id: string) => `${SWAPS_PATH}/${id}/approve`,
     reject: (id: string) => `${SWAPS_PATH}/${id}/reject`,
   },
@@ -158,5 +160,6 @@ export const ROUTES = {
   shiftDetail: (id: string) => `/shifts/${id}`,
   availability: "/availability",
   swaps: "/swaps",
+  openShifts: "/swaps/open",
   adminAudit: "/admin/audit",
 };

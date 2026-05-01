@@ -20,6 +20,7 @@ export enum QueryKeys {
   OvertimeOverrides = "overtimeOverrides",
   Swaps = "swaps",
   Swap = "swap",
+  SwapsOpen = "swapsOpen",
   Notifications = "notifications",
   NotificationsUnread = "notificationsUnread",
   Audit = "audit",
