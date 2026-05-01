@@ -12,6 +12,7 @@ const PROTECTED_PREFIXES = [
   ROUTES.swaps,
   ROUTES.adminAudit,
   ROUTES.onDuty,
+  ROUTES.analytics,
 ];
 const AUTH_ROUTES = [ROUTES.login, ROUTES.signup];
 

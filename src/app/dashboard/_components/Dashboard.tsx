@@ -12,6 +12,7 @@ import { ApiVerifiedInfo } from "@/app/dashboard/_components/ApiVerifiedInfo";
 import { LogoutButton } from "@/app/dashboard/_components/LogoutButton";
 import { SessionInfo } from "@/app/dashboard/_components/SessionInfo";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { NotificationChannelToggle } from "@/components/notifications/NotificationChannelToggle";
 import { apiFetch } from "@/lib/api/server";
 import { createClient } from "@/lib/supabase/server";
 import { UserRole } from "@/shared/constants";
@@ -28,6 +29,10 @@ export const Dashboard = async () => {
 
   const meResult = await apiFetch<CurrentUser>(APIS.auth.me);
   const isAdmin = meResult.ok && meResult.data.role === UserRole.Admin;
+  const canViewAnalytics =
+    meResult.ok &&
+    (meResult.data.role === UserRole.Admin ||
+      meResult.data.role === UserRole.Manager);
 
   return (
     <div className="flex flex-1 items-center justify-center p-4">
@@ -88,6 +93,14 @@ export const Dashboard = async () => {
             >
               On duty now
             </Link>
+            {canViewAnalytics ? (
+              <Link
+                href={ROUTES.analytics}
+                className={buttonVariants({ variant: "secondary" })}
+              >
+                Analytics
+              </Link>
+            ) : null}
             {isAdmin ? (
               <Link
                 href={ROUTES.adminAudit}
@@ -96,6 +109,9 @@ export const Dashboard = async () => {
                 Audit log
               </Link>
             ) : null}
+            <div className="border-t pt-3">
+              <NotificationChannelToggle />
+            </div>
             <LogoutButton />
           </div>
         </CardContent>

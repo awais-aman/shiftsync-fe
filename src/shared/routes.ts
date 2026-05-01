@@ -12,6 +12,7 @@ const SWAPS_PATH = `${backendURL}/swap-requests`;
 const NOTIFICATIONS_PATH = `${backendURL}/notifications`;
 const AUDIT_PATH = `${backendURL}/audit`;
 const ON_DUTY_PATH = `${backendURL}/on-duty`;
+const ANALYTICS_PATH = `${backendURL}/analytics`;
 
 // Backend Routes
 export const APIS = {
@@ -126,6 +127,26 @@ export const APIS = {
     unreadCount: `${NOTIFICATIONS_PATH}/unread-count`,
     markRead: (id: string) => `${NOTIFICATIONS_PATH}/${id}/read`,
     markAllRead: `${NOTIFICATIONS_PATH}/mark-all-read`,
+    channel: `${NOTIFICATIONS_PATH}/channel`,
+  },
+  analytics: {
+    fairness: (params?: { from?: string; to?: string }) => {
+      const search = new URLSearchParams();
+      if (params?.from) search.set("from", params.from);
+      if (params?.to) search.set("to", params.to);
+      const qs = search.toString();
+      return qs
+        ? `${ANALYTICS_PATH}/fairness?${qs}`
+        : `${ANALYTICS_PATH}/fairness`;
+    },
+    overtime: (params?: { weekStart?: string }) => {
+      const search = new URLSearchParams();
+      if (params?.weekStart) search.set("weekStart", params.weekStart);
+      const qs = search.toString();
+      return qs
+        ? `${ANALYTICS_PATH}/overtime?${qs}`
+        : `${ANALYTICS_PATH}/overtime`;
+    },
   },
   onDuty: {
     list: ON_DUTY_PATH,
@@ -166,5 +187,6 @@ export const ROUTES = {
   swaps: "/swaps",
   openShifts: "/swaps/open",
   onDuty: "/on-duty",
+  analytics: "/analytics",
   adminAudit: "/admin/audit",
 };
