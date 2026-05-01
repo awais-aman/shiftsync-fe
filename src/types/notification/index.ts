@@ -10,6 +10,7 @@ export enum NotificationType {
   SwapCancelled = "swap_cancelled",
   SwapExpired = "swap_expired",
   OvertimeWarning = "overtime_warning",
+  AvailabilityChanged = "availability_changed",
 }
 
 export type Notification = {
